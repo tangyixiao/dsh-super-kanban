@@ -108,8 +108,14 @@ npm test
 ```
 
 Please add or update tests for any behaviour change. Tests must pass on the
-Node versions exercised by CI (22.19 and 24) without DSH running. CI also
-prints a **non-blocking** coverage report on the Node 22.19 job via
+Node versions exercised by CI (22.19 and 24, on Linux and Windows) without DSH
+running. The source-install protection test invokes Bash with relative paths
+and an isolated fixture inside the checkout so native Windows paths do not
+cross into Bash. On Windows it uses the Bash bundled with Git for Windows
+(also present on GitHub-hosted Windows runners), rather than a WSL launcher
+that may appear first on `PATH`. The fixture is removed after the test. These offline
+checks do not establish DSH desktop UI compatibility. CI also prints a
+**non-blocking** coverage report on the Linux Node 22.19 job via
 `node --test --experimental-test-coverage`; it is informational, not a
 threshold, so a coverage dip does not fail the pull request.
 

@@ -118,3 +118,31 @@ jobs:
           }
           console.log(`npm pack contains ${files.length} files; required entries present, no repo-only files.`);
           NODE
+
+  windows:
+    name: Windows Node ${{ matrix.node }}
+    runs-on: windows-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["22.19", "24"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Show tool versions
+        run: |
+          node --version
+          npm --version
+
+      - name: Unit tests, repository validation, privacy, docs and version checks
+        run: npm run check
+
+      - name: Package contents (npm pack --dry-run)
+        run: npm pack --dry-run
